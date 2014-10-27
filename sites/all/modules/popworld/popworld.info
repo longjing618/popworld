@@ -1,0 +1,10 @@
+; $Id: $
+name = Popworld
+description = Popworld module.
+core = 7.x
+package = Popworld
+php = 5.3
+
+version = "7.x-4.1"
+core = "7.x"
+project = "popworld"

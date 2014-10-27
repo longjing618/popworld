@@ -1,0 +1,112 @@
+<?php	
+
+/**
+ * Implements hook_form_alter().
+ */
+function popworld_form_alter(&$form, $form_state, $form_id) 
+{
+    if(strstr($form_id, 'webform_client_form_')) 
+	{
+		$form['generate_popworld'] = array(
+                	'#type' => 'button',
+                	'#ajax' => array(
+                    	'action' => 'click',
+                    	'callback' => 'generatepopworld',
+                    	'wrapper' => 'form-ajax-node-content',
+                    	'method' => 'replace',
+                    	'name' => 'search',
+                	),
+                '#value' => t('Start'),
+            	);
+       $form['markup'] = array(
+            '#prefix' => '<div id = "form-ajax-node-content">',
+            '#suffix' => '</div>',
+            '#markup' => '',
+            '#weight' => 2000, //set weight to show markup at the bottom of the form
+       );
+	   unset($form['actions']['submit']);
+	}
+}
+
+function generatepopworld($form, &$form_state) 
+{
+    drupal_debug($form,NULL);
+
+    $module_name = $form["#id"];
+    $output = "";
+    switch($module_name)
+    {
+        case "webform-client-form-2":
+            $output = getBasics($form_state);
+            break;
+        case "webform-client-form-3":
+            $output = getMigration($form_state);
+            break;
+        case "webform-client-form-4":
+            $output = getDrift($form_state);
+            break;        
+        case "webform-client-form-5":
+            $output = getNRMating($form_state);
+            break;        
+        case "webform-client-form-6":
+            $output = getMutation($form_state);
+            break;        
+        case "webform-client-form-7":
+            $output = getSelection($form_state);
+            break;
+        case "webform-client-form-8":
+            $output = getMpulsS($form_state);
+            break;
+    }
+    $form['markup'] = array(
+            '#prefix' => '<div id = "form-ajax-node-content">',
+            '#suffix' => '</div>',
+            '#markup' => $output,
+            '#weight' => 2000,
+       );
+    return $form['markup'];
+}
+
+function getBasics($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+function getMigration($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+function getDrift($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+function getNRMating($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+function getMutation($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+function getSelection($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+function getMpulsS($form_state)
+{
+    $output = 'new test';
+    return $output;
+}
+
+?>
