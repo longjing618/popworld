@@ -32,6 +32,7 @@ function popworld_form_alter(&$form, $form_state, $form_id)
 {
     if(strstr($form_id, 'webform_client_form_')) 
 	{
+        //Add ask help button
         if(strstr($form_id, 'webform_client_form_24'))
         {
             $form['ask_help'] = array(
@@ -64,7 +65,7 @@ function popworld_form_alter(&$form, $form_state, $form_id)
                         	'name' => 'search',
                     	),*/
                     '#value' => t('Start'),
-                    //'#attributes' => array('onclick' => 'generatepopworld(); return false;'),
+                    '#attributes' => array('onclick' => 'return false;'),
                     //'#validate' => array(),
                     //'#executes_submit_callback' => FALSE,
                 	);
@@ -76,10 +77,11 @@ function popworld_form_alter(&$form, $form_state, $form_id)
                   '#attributes' => array('onclick' => 'this.form.reset(); return false;'),
             );
            $form['markup'] = array(
-                '#prefix' => '<div id = "form-ajax-node-content">',
+                '#prefix' => '<div id = "webform_id" hidden>',
                 '#suffix' => '</div>',
-                '#markup' => '',
+                '#markup' => $form_id,
                 '#weight' => 2000, //set weight to show markup at the bottom of the form
+                //'#type' => 'hidden',
            );
        }
 	   unset($form['actions']['submit']);
@@ -164,69 +166,6 @@ function generatepopworld($form, &$form_state)
             '#weight' => 2000,
        );
     return $form['markup'];
-}
-
-function getBasics($form_state)
-{
-    $values = $form_state["values"]["submitted"];
-    $output = "";
-    drupal_debug($form_state,NULL);
-    $population = $values["population"];
-    $frequency = $values["frequency_of__a1_allele_red"];
-    $dominance = $values["dominance"];
-    $steps = $values["step_n_generations_forward"];
-
-    if(empty($population) || empty($frequency) || empty($dominance))
-        $ret = array();
-    else
-    {
-        $basics = new basics($population,$frequency,$dominance);
-        $ret = $basics->output();
-        //drupal_debug($output,NULL);
-    }
-    foreach($ret as $key => $value)
-    {
-         $output .= $key . " " . $value . " ";
-         $output .= "<br/>";
-    }   
-
-    return $output;
-}
-
-function getMigration($form_state)
-{
-    $output = 'new test';
-    return $output;
-}
-
-function getDrift($form_state)
-{
-    $output = 'new test';
-    return $output;
-}
-
-function getNRMating($form_state)
-{
-    $output = 'new test';
-    return $output;
-}
-
-function getMutation($form_state)
-{
-    $output = 'new test';
-    return $output;
-}
-
-function getSelection($form_state)
-{
-    $output = 'new test';
-    return $output;
-}
-
-function getMpulsS($form_state)
-{
-    $output = 'new test';
-    return $output;
 }
 
 ?>
