@@ -1,5 +1,4 @@
 <?php // page template ?>
-
 <?php if($page['topbar']): ?>
   <!--start top bar-->
   <div id="topBar" class="outsidecontent">
@@ -74,22 +73,6 @@
     <!--end main menu-->
   <?php endif; ?>
 
-  <!--border start-->
-  <div id="pageBorder" <?php print $noborder; ?>>
-    <?php if ((!$usebanner && $page['advertise']) || ($usebanner && $banner_image)): ?>
-      <!--start advertise section-->
-      <div id="header-images" <?php print ($usebanner == 0) ? 'class="unlimited"' : ""; ?>>
-        <?php if (!$usebanner): // Use drupal region ?>
-          <?php print render($page['advertise']); ?>
-        <?php elseif ($banner_image): // Use marinelli banners ?>
-          <?php print $banner_text; ?>
-          <?php print $banner_nav; ?>
-          <?php print $banner_image; ?>
-        <?php endif; ?>
-      </div>
-      <!--end advertise-->
-    <?php endif; ?>
-		
 		<?php if ($secondary_menu): ?>
       <!--start secondary navigation-->
       <div id="navigation-secondary" class="sitemenu">

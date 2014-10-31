@@ -4,7 +4,7 @@
  *  $blocktag decides the tag to use for the block title (see theme settings)
  */
 ?>
-<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $blockhide; ?><?php print $classes; ?>"<?php print $attributes; ?>>
+<div id="block-<?php print strtr(drupal_strtolower($block->module . '-' . $block->delta), array(' ' => '-', '_' => '-', '[' => '-', ']' => '')); ?>" class="<?php print $blockhide; ?><?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if (!empty($block->subject)): ?>
     <div class="block-title">
