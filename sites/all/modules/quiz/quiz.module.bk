@@ -1974,32 +1974,6 @@ function quiz_take_quiz($quiz) {
   // Workaround to show question and feedback in separage pages, when the
   // feedback time it set to show after each questions
   elseif ($_POST['op'] == t('Next question')) {
-    
-    if($user->data['isasking'] == 1)
-    {
-      //we need to transfer userpoints here
-      $relationships = user_relationships_load(array('rtid' => 1, 'user' => $user->uid, 'approved' => 1), array(), TRUE);
-      foreach ($relationships as $rid => $relationship) 
-      {
-        //requester_id is the helper
-        $params = array(
-          'uid' => $relationship->requester_id,
-          'points' => 2,
-          'description' => $user->uid. " transfer 2 points to ". $relationship->requester_id,
-          'display' => FALSE,
-        );
-        userpoints_userpointsapi($params);
-
-        $params = array(
-          'uid' => $relationship->requestee_id,
-          'points' => -2,
-          'description' => $user->uid. " transfer 2 points to ". $relationship->requester_id . 'for question',
-          'display' => FALSE,
-        );
-        userpoints_userpointsapi($params);
-      }
-    }
-    //$user->data['isasking'] = 0;
     drupal_goto("node/{$quiz->nid}/take");
   }
   // We maintain two lists: previous questions and upcomming questions.

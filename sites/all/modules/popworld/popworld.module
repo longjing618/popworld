@@ -21,6 +21,7 @@ function popworld_ajax_get_ajax($nid)
     //set relationship here
     $node = node_load($nid);
     user_relationships_request_relationship($node->uid,$user->uid,1,true);
+
     node_delete($nid);
     print "ok";
 }
@@ -83,6 +84,11 @@ function popworld_form_alter(&$form, $form_state, $form_id)
                 '#weight' => 2000, //set weight to show markup at the bottom of the form
                 //'#type' => 'hidden',
            );
+            $form['result'] = array(
+                '#prefix' => '<div id = "result">',
+                '#suffix' => '</div>',
+                '#weight' => 2000, //set weight to show markup at the bottom of the form
+           );
        }
 	   unset($form['actions']['submit']);
 	}
@@ -125,9 +131,18 @@ function create_help_alert($form, &$form_state)
         '#markup' => "test",
         '#weight' => 2000,
     );
+
+    //set a variable to show that the use need help for the current question
+    //which will be used in the quiz module elseif ($_POST['op'] == t('Next question')) 
+    $existing = user_load($user->uid);
+    $edit = (array) $existing;
+    $edit['data']['isasking'] = 1;
+    user_save($user, $edit);
+
     return $form['markup'];
 }
 
+/*
 function generatepopworld($form, &$form_state) 
 {
     $module_name = $form["#form_id"];
@@ -167,5 +182,6 @@ function generatepopworld($form, &$form_state)
        );
     return $form['markup'];
 }
+*/
 
 ?>
