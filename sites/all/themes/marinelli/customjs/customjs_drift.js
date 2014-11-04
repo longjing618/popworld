@@ -6,7 +6,11 @@ function init()
 	obj.data = [];
 	var temp = {};
 	temp.populationSize = jQuery("#edit-submitted-population").val();
-	temp.dominant = jQuery("#edit-submitted-dominance").val();
+	//temp.dominant = jQuery("#edit-submitted-dominance").val();
+	if(jQuery("#edit-submitted-dominance-1").is(':checked'))
+		temp.dominant = "red";
+	else
+		temp.dominant = "blue";
 	temp.startFrequencyA1 = jQuery("#edit-sliderfield-submitted-frequency-of-a1-allele-red-container").slider("option", "value");
 	temp.startFrequencyA2 = 1 - temp.startFrequencyA1;
 	temp.currentFrequencyA1 = jQuery("#edit-sliderfield-submitted-frequency-of-a1-allele-red-container").slider("option", "value");;
@@ -60,6 +64,40 @@ function calculateAGeneration()
 function calculateAlleleFrequencies()
 {
 	var temp = basics.data[basics.count];
+
+//DRIFT custom
+	var currentfA1 = temp.currentFrequencyA1;
+	
+	if(currentfA1 == 0.0)
+	{					
+		temp.currentFrequencyA1 = 0.0;
+		temp.currentFrequencyA2 = 1.0;
+	}
+	else if( currentfA1 == 1.0)
+	{	
+		temp.currentFrequencyA1 = 1.0;
+		temp.currentFrequencyA2 = 0.0;
+		
+	}
+	else
+	{
+		var twicePop = 2*temp.populationSize;
+		var a1alleleCount = 0;
+		for(var i = 0; i < twicePop; i++)
+		{
+			if(Math.random() < currentfA1)
+			{
+				a1alleleCount++;
+			}
+		}
+
+		var tmp = a1alleleCount/twicePop;
+		temp.currentFrequencyA1 = tmp;
+		temp.currentFrequencyA2 = 1 - tmp;
+	}
+//
+
+
 	temp.currentFrequencyA1A1 = temp.currentFrequencyA1*temp.currentFrequencyA1;
 	temp.currentFrequencyA1A2 = 2*temp.currentFrequencyA1*temp.currentFrequencyA2;
 	temp.currentFrequencyA2A2 = temp.currentFrequencyA2*temp.currentFrequencyA2;
@@ -68,13 +106,7 @@ function calculateAlleleFrequencies()
 
 function calculateNextGeneration()
 {
-	var temp = basics.data[basics.count-1];
-	var currentfA1 = temp.currentFrequencyA1;
-	//incrementGenerationCount();
-	
-	temp.currentFrequencyA1 = currentfA1;
-	temp.currentFrequencyA2 = 1 - currentfA1;
-	basics.data[basics.count] = temp;
+	basics.data[basics.count] = basics.data[basics.count-1];
 
 	calculateAlleleFrequencies();
 	

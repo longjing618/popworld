@@ -27,6 +27,7 @@
   drupal_add_js(path_to_theme() .'/customjs/serial.js');
   drupal_add_js(path_to_theme() .'/customjs/none.js');
   drupal_add_js(path_to_theme() .'/customjs/customjs_drift.js');
+  drupal_add_js(path_to_theme() .'/customjs/customjs.js');
 ?>
 <?php
   // Print out the progress bar at the top of the page
