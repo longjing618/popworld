@@ -22,6 +22,7 @@
  */
 ?>
 <?php
+  drupal_add_js(path_to_theme() .'/Chart/Chart.js');
   drupal_add_js(path_to_theme() .'/customjs.js');
 ?>
 <?php
