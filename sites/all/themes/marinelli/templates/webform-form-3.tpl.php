@@ -22,7 +22,12 @@
  */
 ?>
 <?php
-  drupal_add_js(path_to_theme() .'/customjs.js');
+  drupal_add_css(path_to_theme() .'/customcss.css', array('group' => CSS_THEME, 'every_page' => FALSE));
+  drupal_add_js(path_to_theme() .'/customjs/amcharts.js');
+  drupal_add_js(path_to_theme() .'/customjs/serial.js');
+  drupal_add_js(path_to_theme() .'/customjs/none.js');
+  drupal_add_js(path_to_theme() .'/customjs/customjs_migration.js');
+  drupal_add_js(path_to_theme() .'/customjs/customjs.js');
 ?>
 <?php
   // Print out the progress bar at the top of the page
