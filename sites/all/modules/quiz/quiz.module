@@ -2000,8 +2000,12 @@ function quiz_take_quiz($quiz) {
 
         user_relationships_delete_relationship($relationship, 1, $op = 'remove');
       }
+      $existing = user_load($user->uid);
+      $edit = (array) $existing;
+      $edit['data']['isasking'] = 0;
+      user_save($user, $edit);
     }
-    //$user->data['isasking'] = 0;
+
 
 
     drupal_goto("node/{$quiz->nid}/take");
@@ -2550,6 +2554,13 @@ function quiz_quiz_finished($quiz, $score, $session_data) {
     }
     userpoints_userpointsapi($params);
   }
+
+  //if($score["passing"] == 1)
+  //{
+
+  //}
+  //drupal_debug($quiz);
+  rules_invoke_event('getbadge_event', $quiz,$score["passing"]);
 }
 
 /**

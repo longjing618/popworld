@@ -1,4 +1,8 @@
 <?php // page template ?>
+<?php
+  drupal_add_js(path_to_theme() .'/customjs/customjs.js');
+?>
+
 <?php if($page['topbar']): ?>
   <!--start top bar-->
   <div id="topBar" class="outsidecontent">

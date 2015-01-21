@@ -560,6 +560,7 @@ function theme_quiz_take_summary($variables) {
     }
     $output .= '<div id="quiz_score_possible">' . t('You got %num_correct of %question_count possible points.', array('%num_correct' => $score['numeric_score'], '%question_count' => $score['possible_score'])) . '</div>' . "\n";
     $output .= '<div id="quiz_score_percent">' . t('Your score: %score %', array('%score' => $score['percentage_score'])) . '</div>' . "\n";
+  $output .= t('You got a badge: ') . '<img src="sites/default/files/badges/basics_expert.png"></img>';
   }
   if (isset($summary['passfail'])) {
     $output .= '<div id="quiz_summary">' . $summary['passfail'] . '</div>' . "\n";
@@ -617,7 +618,6 @@ function theme_quiz_user_summary($variables) {
   $output .= '<div id="quiz_score_percent">' .
     t('Your score was: @score %', array('@score' => $score['percentage_score'])) .
     '</div>';
-
   if (isset($summary['passfail'])) {
     $output .= '<div id="quiz_summary">' . $summary['passfail'] . '</div>' . "\n";
   }

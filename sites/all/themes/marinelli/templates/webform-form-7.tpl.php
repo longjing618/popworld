@@ -26,7 +26,8 @@
   drupal_add_js(path_to_theme() .'/customjs/amcharts.js');
   drupal_add_js(path_to_theme() .'/customjs/serial.js');
   drupal_add_js(path_to_theme() .'/customjs/none.js');
-  drupal_add_js(path_to_theme() .'/customjs/customjs_basics.js');
+  drupal_add_js(path_to_theme() .'/customjs/customjs_selection.js');
+  drupal_add_js(path_to_theme() .'/customjs/customjs.js');
 ?>
 <?php
   // Print out the progress bar at the top of the page

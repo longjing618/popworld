@@ -1,4 +1,7 @@
 <?php // node template ?>
+<?php
+  drupal_add_js(path_to_theme() .'/customjs/customjs.js');
+?>
 
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <div class="node-container">

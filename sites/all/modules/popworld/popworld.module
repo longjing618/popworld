@@ -11,19 +11,219 @@ function popworld_menu() {
     'access arguments' => array('access content'),
     //'delivery callback' => 'popworld_ajax_callback',  // Magic goes here
   );
+
+/*
+  $items['basic'] = array(
+    'title' => t('Popworld'),
+    //'description' => t('Description'),
+    'page callback' => 'my_test',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  */
+  $items['drift'] = array(
+    'title' => t('Drift module'),
+    'description' => t('This is the drift module'),
+    'page callback' => 'popworld_drift',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['migration'] = array(
+    'title' => t('Popworld'),
+    //'description' => t('Description'),
+    'page callback' => 'my_test',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['ms'] = array(
+    'title' => t('Popworld'),
+    //'description' => t('Description'),
+    'page callback' => 'my_test',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['mutation'] = array(
+    'title' => t('Popworld'),
+    //'description' => t('Description'),
+    'page callback' => 'my_test',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['nr-mating'] = array(
+    'title' => t('Popworld'),
+    //'description' => t('Description'),
+    'page callback' => 'my_test',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['selection'] = array(
+    'title' => t('Popworld'),
+    //'description' => t('Description'),
+    'page callback' => 'my_test',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
   return $items;
+}
+
+function popworld_drift()
+{
+  
+}
+
+function my_test() {
+  // Creates a new object wrapping the given file (path)
+  $swf = new SWFObject('/popworld/sites/all/modules/popworld/popworld.swf');
+
+  // With that object, first we add a param to allow full screen.
+  $swf->param('allowFullScreen', 'true')
+    // Add another param to set the type to movie.
+    //->param('type','movie')
+
+    // Set some flash variables, beginning with the aspect ratio...
+    ->flashVar('maintainAspectRatio', 'true')
+
+    // Set the height and width of the player.
+    ->height(700)
+    ->width(700)
+
+    // Set a message for non-Flash capable clients.
+    ->noFlash('Install flash.')
+
+   // Declare the minimal Flash version required for this object.
+    ->minimumVersion('9.0.28');
+
+  // Theme the object and return that to the client.
+  return theme('swfembed_embed', array('swf' => $swf));
 }
 
 function popworld_ajax_get_ajax($nid) 
 {
     global $user;
-    //drupal_debug($nid);
+    drupal_debug($nid);
     //set relationship here
     $node = node_load($nid);
+    drupal_debug("---");
+    drupal_debug($node->uid);
     user_relationships_request_relationship($node->uid,$user->uid,1,true);
 
     node_delete($nid);
     print "ok";
+}
+
+/**
+ * Implementation of hook_rules_event_info()
+ */
+function popworld_rules_event_info() 
+{
+  return array(
+    'getbadge_event' => array(
+      'label' => t('Get a badge'),
+      'module' => 'popworld',
+      'group' => 'Popworld' ,
+      'variables' => array(
+        'article' => array('type' => 'node', 'label' => t('The quiz node.')),
+        'score' => array('type' => 'text', 'label' => t('The score.')),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_rules_action_info().
+ */
+function popworld_rules_action_info() 
+{
+  $actions = array
+  (
+    'assignbadge' => array(
+      'label' => t('Assign a badge'),
+      'group' => t('Popworld'),
+      'parameter' => array
+      (
+        // Each parameter is keyed with an internally used machine name.
+        'account' => array
+        (
+          'type' => 'user',
+          'label' => t('User to be assigned a badge'),
+          // If we were to make changes to the parameter object, whe should set
+          // the 'save' property to TRUE. This makes Rules handle the saving in
+          // a more optimized way than if each action saved the objects.
+          'save' => TRUE,
+        ),
+        'article' => array('type' => 'node', 'label' => t('The quiz node.')),
+      ),
+    ),
+  );
+  // Don't forget to return the array of action information!
+  return $actions;
+}
+
+function assignbadge($account,$article)
+{
+    $user_id = $account->uid;
+    
+    switch($article->nid)
+    {
+        case 12:
+            $role_id = 7;
+            break;
+        case 14:
+            $role_id = 8;
+            break;
+        case 15:
+            $role_id = 9;
+            break;
+        case 16:
+            $role_id = 10;
+            break;
+        case 17:
+            $role_id = 11;
+            break;
+        case 18:
+            $role_id = 12;
+            break;
+        case 19:
+            $role_id = 13;
+            break;                                                            
+    }
+    if (user_role_load($role_id))
+        user_multiple_role_edit(array($user_id), 'add_role', $role_id);
+}
+
+/**
+ * Implements hook_rules_condition_info().
+ */
+function popworld_rules_condition_info() 
+{
+    $conditions = array();
+    $conditions['ispassing'] = array
+    (
+      'label' => t('The user pass a quiz'),
+      'group' => t('Popworld'),
+      // Parameters are described identically to how they work for actions.
+      'parameter' => array
+      (
+        'quiz' => array('type' => 'node', 'label' => t('The quiz node.')),
+        'score' => array('type' => 'number', 'label' => t('The score.')),
+      ),
+    );
+
+  return $conditions;
+}
+
+function ispassing($quiz,$score)
+{
+    if($score == 1)
+        return true;
+    return false;
 }
 
 /**
@@ -85,8 +285,11 @@ function popworld_form_alter(&$form, $form_state, $form_id)
                 //'#type' => 'hidden',
            );
             $form['result'] = array(
-                '#prefix' => '<div id = "result">',
+                //'#prefix' => '<canvas id="result" width="800" height="500">',
+                //'#suffix' => '</canvas>',
+                '#prefix' => '<div id = "chartdiv" style="width:100%;height:500px;">',
                 '#suffix' => '</div>',
+
                 '#weight' => 2000, //set weight to show markup at the bottom of the form
            );
        }
@@ -98,11 +301,11 @@ function create_help_alert($form, &$form_state)
 {
     global $user;
     $node = new stdClass();
-    $node->title = "hello";
+    $node->title = "Ask for help";
     $node->type = "user_alert";
     node_object_prepare($node); // Sets some defaults. Invokes hook_prepare() and hook_node_prepare().
     $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
-    $node->body[$node->language][0]['value'] = "This alert is created from code <input class='accept-help form-submit ajax-processed' type='submit' value='Accept help'> ";
+    $node->body[$node->language][0]['value'] = "User ".$user->name." has a question now. <input class='accept-help form-submit ajax-processed' type='submit' value='Accept help'> ";
     $node->uid = $user->uid;
     $node->status = 1; //(1 or 0): published or not
     $node->promote = 0; //(1 or 0): promoted to front page
