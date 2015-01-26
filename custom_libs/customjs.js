@@ -64,6 +64,7 @@ function getOutput(name)
 
 		if(status == 0)
 			$("#chartdiv").hide()
+		showResult();
 	})
 }
 
@@ -348,6 +349,7 @@ function getChart(name)
 	});
 
 	zoomChart(chart);
+	$( "#chartdiv" ).draggable();
 	return chart;
 }
 
