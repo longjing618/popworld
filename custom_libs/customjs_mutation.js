@@ -5,20 +5,19 @@ function init()
 	obj.count = 0;
 	obj.data = [];
 	var temp = {};
-	temp.populationSize = jQuery("#edit-submitted-population").val();
-	//temp.dominant = jQuery("#edit-submitted-dominance").val();
-	if(jQuery("#edit-submitted-dominance-1").is(':checked'))
+	temp.populationSize = $("#population").val();
+	if($("#dominance").val() == "RED")
 		temp.dominant = "red";
 	else
 		temp.dominant = "blue";
-	temp.startFrequencyA1 = jQuery("#edit-sliderfield-submitted-frequency-of-a1-allele-red-container").slider("option", "value");
+	temp.startFrequencyA1 = $("#freq").val();
 	temp.startFrequencyA2 = 1 - temp.startFrequencyA1;
-	temp.currentFrequencyA1 = jQuery("#edit-sliderfield-submitted-frequency-of-a1-allele-red-container").slider("option", "value");
+	temp.currentFrequencyA1 = $("#freq").val();
 	temp.currentFrequencyA2 = 1 - temp.startFrequencyA1;
 
 	//Mutation extra
-	temp.A1mutateA2 = jQuery("#edit-submitted-a1-to-a2-mutation-rate0000000001-000001").val();
-	temp.A2mutateA1 = jQuery("#edit-submitted-a2-to-a1-mutation-rate0000000001-000001").val();
+	temp.A1mutateA2 = $("#a1toa2").val();
+	temp.A2mutateA1 = $("#a2toa1").val();
 	
 	obj.data[obj.count] = temp;
 	return obj;
@@ -87,7 +86,7 @@ function calculateAlleleFrequencies()
 
 function calculateNextGeneration()
 {
-	basics.data[basics.count] = basics.data[basics.count-1];
+	basics.data[basics.count] = $.extend(true, {}, basics.data[basics.count-1]);
 	calculateAlleleFrequencies();
 	
 	calculateAGeneration();

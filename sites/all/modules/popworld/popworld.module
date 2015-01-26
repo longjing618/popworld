@@ -25,16 +25,16 @@ function popworld_menu() {
   $items['drift'] = array(
     'title' => t('Drift module'),
     'description' => t('This is the drift module'),
-    'page callback' => 'popworld_drift',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array('drift_template'),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
   $items['migration'] = array(
-    'title' => t('Popworld'),
+    'title' => t('Migration module'),
     //'description' => t('Description'),
-    'page callback' => 'my_test',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array("migration_template"),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
@@ -47,35 +47,105 @@ function popworld_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   $items['mutation'] = array(
-    'title' => t('Popworld'),
+    'title' => t('Mutation module'),
     //'description' => t('Description'),
-    'page callback' => 'my_test',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array("mutation_template"),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['nr-mating'] = array(
-    'title' => t('Popworld'),
+  $items['nrmating'] = array(
+    'title' => t('NR-mating module'),
     //'description' => t('Description'),
-    'page callback' => 'my_test',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array("nrmating_template"),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
   $items['selection'] = array(
-    'title' => t('Popworld'),
+    'title' => t('Selection module'),
     //'description' => t('Description'),
-    'page callback' => 'my_test',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array("selection_template"),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
 }
 
-function popworld_drift()
+function popworld_template($args)
 {
-  
+  return theme($args);
+}
+
+/*
+ * Implement hook_theme().
+ */
+function popworld_theme(){
+    return array(
+        'drift_template' => array(
+            // file name will be drift-page.tpl.php
+            'template' => 'drift-page',
+        ),
+        'migration_template' => array(
+            'template' => 'migration-page',
+        ),
+        'nrmating_template' => array(
+            'template' => 'nrmating-page',
+        ),
+        'mutation_template' => array(
+            'template' => 'mutation-page',
+        ),  
+        'selection_template' => array(
+            'template' => 'selection-page',
+        ),              
+        'drift' =>  array(
+          'template' => 'drift',
+          'render element' => 'page'
+        ),
+        'migration' =>  array(
+          'template' => 'migration',
+          'render element' => 'page'
+        ),
+        'nrmating' =>  array(
+          'template' => 'nrmating',
+          'render element' => 'page'
+        ),
+        'mutation' =>  array(
+          'template' => 'mutation',
+          'render element' => 'page'
+        ),
+        'selection' =>  array(
+          'template' => 'selection',
+          'render element' => 'page'
+        ),      
+    );
+}
+
+function popworld_preprocess_page(&$variables, $hook) 
+{
+  //print_r($variables["theme_hook_suggestions"]);
+  if ($variables["theme_hook_suggestions"][0] == "page__drift") 
+  {
+    $variables['theme_hook_suggestions'][] = 'drift';
+  }
+  else if($variables["theme_hook_suggestions"][0] == "page__migration")
+  {
+    $variables['theme_hook_suggestions'][] = 'migration';
+  }
+  else if($variables["theme_hook_suggestions"][0] == "page__nrmating")
+  {
+    $variables['theme_hook_suggestions'][] = 'nrmating';
+  }
+  else if($variables["theme_hook_suggestions"][0] == "page__mutation")
+  {
+    $variables['theme_hook_suggestions'][] = 'mutation';
+  }
+  else if($variables["theme_hook_suggestions"][0] == "page__selection")
+  {
+    $variables['theme_hook_suggestions'][] = 'selection';
+  }  
+
 }
 
 function my_test() {

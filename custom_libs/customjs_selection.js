@@ -5,12 +5,21 @@ function init()
 	obj.count = 0;
 	obj.data = [];
 	var temp = {};
-	temp.populationSize = jQuery("#edit-submitted-population").val();
-	temp.dominant = jQuery("#edit-submitted-dominance").val();
-	temp.startFrequencyA1 = jQuery("#edit-sliderfield-submitted-frequency-of-a1-allele-red-container").slider("option", "value");
+	temp.populationSize = $("#population").val();
+	if($("#dominance").val() == "RED")
+		temp.dominant = "red";
+	else
+		temp.dominant = "blue";
+	temp.startFrequencyA1 = $("#freq").val();
 	temp.startFrequencyA2 = 1 - temp.startFrequencyA1;
-	temp.currentFrequencyA1 = jQuery("#edit-sliderfield-submitted-frequency-of-a1-allele-red-container").slider("option", "value");;
+	temp.currentFrequencyA1 = $("#freq").val();
 	temp.currentFrequencyA2 = 1 - temp.startFrequencyA1;
+
+	//selection extra
+	temp.fitnessA1A1 = $("#a1a1").val();
+	temp.fitnessA1A2 = $("#a1a2").val();
+	temp.fitnessA2A2 = $("#a2a2").val();
+
 	obj.data[obj.count] = temp;
 	return obj;
 }
@@ -60,22 +69,22 @@ function calculateAGeneration()
 function calculateAlleleFrequencies()
 {
 	var temp = basics.data[basics.count];
-	temp.currentFrequencyA1A1 = temp.currentFrequencyA1*temp.currentFrequencyA1;
-	temp.currentFrequencyA1A2 = 2*temp.currentFrequencyA1*temp.currentFrequencyA2;
-	temp.currentFrequencyA2A2 = temp.currentFrequencyA2*temp.currentFrequencyA2;
+	var p = temp.currentFrequencyA1;
+	var q = temp.currentFrequencyA2;
+	var wAverage = p*p*temp.fitnessA1A1 + 2*p*q*temp.fitnessA1A2 + q*q*temp.fitnessA2A2;
+			
+	temp.currentFrequencyA1 = (p*p*temp.fitnessA1A1 + p*q*temp.fitnessA1A2)/wAverage;
+	temp.currentFrequencyA2 = (p*q*temp.fitnessA1A2 + q*q*temp.fitnessA2A2)/wAverage;
+		
+	temp.currentFrequencyA1A1 = (p*p*temp.fitnessA1A1)/wAverage;
+	temp.currentFrequencyA1A2 = (2*p*q*temp.fitnessA1A2)/wAverage;
+	temp.currentFrequencyA2A2 = (q*q*temp.fitnessA2A2)/wAverage;
 	basics.data[basics.count] = temp;
 }
 
 function calculateNextGeneration()
 {
-	var temp = basics.data[basics.count-1];
-	var currentfA1 = temp.currentFrequencyA1;
-	//incrementGenerationCount();
-	
-	temp.currentFrequencyA1 = currentfA1;
-	temp.currentFrequencyA2 = 1 - currentfA1;
-	basics.data[basics.count] = temp;
-
+	basics.data[basics.count] = $.extend(true, {}, basics.data[basics.count-1]);
 	calculateAlleleFrequencies();
 	
 	calculateAGeneration();
