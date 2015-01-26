@@ -17,6 +17,8 @@ function myHandler( event )
 }
 
 basics = {};
+chart = {};
+graphs = {};
 
 function generatepopworld()
 {
@@ -41,7 +43,7 @@ function getOutput(name)
 	zeroGeneration();
 	count = $("#steps").val();
 	calculateNextNGenerations(count);
-	getChart(name);
+	chart = getChart(name);
 	//print();
 	//if($("#edit-next").length == 0)
 		$( '<button role="button" class="pop_button" id="next"><span class="ui-button-text">Next</span></button>' ).insertAfter( "#start" );
@@ -57,12 +59,28 @@ function getOutput(name)
 			$("#chartdiv").show();
 
 		calculateNextNGenerations(count);
-		getChart($("#graph_type").val());
+		chart = getChart($("#graph_type").val());
 		//print();
 
 		if(status == 0)
 			$("#chartdiv").hide()
 	})
+}
+
+function switchchart()
+{
+	var status = 0;
+	if($("#chartdiv").is(":visible"))
+		status = 1;
+
+	if(status == 0)
+		$("#chartdiv").show();
+
+	chart = getChart($("#graph_type").val());
+	//print();
+
+	if(status == 0)
+		$("#chartdiv").hide()
 }
 
 function roundnumber(num)
@@ -110,6 +128,14 @@ function generatecdata(name)
 	        	});
 	        	break;
 			case "pop_count":
+					cdata.push({
+		            count: i,
+		            dominant: roundnumber(data.currentDominantPopCount),
+		            heterozygous: roundnumber(data.currentHeterozygousCount),
+					homozygousrecessive:roundnumber(data.currentHomozygousRecessiveCount),
+					homozygousdominant:roundnumber(data.currentHomozygousDominantCount),
+	        	});
+	        	break;
 			case "genotypes":
 			case "phenotypes":
 			default:
@@ -131,7 +157,6 @@ function getChartData(name)
 	var cdata = generatecdata(name);
 	var title;
 	var valueAxes;
-	var graphs;
 
 	switch(name)
 	{
@@ -157,7 +182,7 @@ function getChartData(name)
 					    },];
 			title = "Frequency";
 			graphs = [{
-				        "valueAxis": "a1",
+				        "valueAxis": "v1",
 				        "lineColor": ($("#dominance").val() == "RED"? "red":"blue"),
 				        "bullet": "round",
 				        "bulletBorderThickness": 1,
@@ -168,7 +193,7 @@ function getChartData(name)
 				        "type": "smoothedLine",
 				        //"balloonFunction":getTitle,
 				    }, {
-				        "valueAxis": "a2",
+				        "valueAxis": "v2",
 				        "lineColor": ($("#dominance").val() == "RED"? "blue":"red"),
 				        "bullet": "square",
 				        "bulletBorderThickness": 1,
@@ -178,7 +203,7 @@ function getChartData(name)
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
 				    }, {
-				        "valueAxis": "a1a1",
+				        "valueAxis": "v1",
 				        "lineColor": "#009900",
 				        "bullet": "diamond",
 				        "bulletBorderThickness": 1,
@@ -188,7 +213,7 @@ function getChartData(name)
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
 				    }, {
-				        "valueAxis": "a1a2",
+				        "valueAxis": "v1",
 				        "lineColor": "#CC6600",
 				        "bullet": "triangleLeft",
 				        "bulletBorderThickness": 1,
@@ -198,7 +223,7 @@ function getChartData(name)
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
 				    }, {
-				        "valueAxis": "a2a2",
+				        "valueAxis": "v1",
 				        "lineColor": "#FF3399",
 				        "bullet": "triangleRight",
 				        "bulletBorderThickness": 1,
@@ -210,7 +235,69 @@ function getChartData(name)
 				    },];
 			break;
 		case "pop_count":
-			return "Pop Count";
+			valueAxes = [{
+			        "id":"v1",
+			        "axisColor": "#FF6600",
+			        "axisThickness": 2,
+			        "gridAlpha": 0,
+			        "axisAlpha": 1,
+			        "position": "left",
+			        "minimum":0,
+			        "maximum":parseInt($("#population").val()),
+			    }, {
+			        "id":"v2",
+			        "axisColor": "#FCD202",
+			        "axisThickness": 2,
+			        "gridAlpha": 0,
+			        "axisAlpha": 1,
+			        "position": "right",
+					"minimum":0,
+			        "maximum":parseInt($("#population").val()),
+			    },];
+			title = "Population Count";
+			graphs = [{
+				        "valueAxis": "v1",
+				        "lineColor": "red",
+				        "bullet": "round",
+				        "bulletBorderThickness": 1,
+				        "hideBulletsCount": 30,
+				        "title": "Dominant",
+				        "valueField": "dominant",
+						"fillAlphas": 0,
+				        "type": "smoothedLine",
+				        //"balloonFunction":getTitle,
+				    }, {
+				        "valueAxis": "v2",
+				        "lineColor": "blue",
+				        "bullet": "square",
+				        "bulletBorderThickness": 1,
+				        "hideBulletsCount": 30,
+				        "title": "Heterozygous",
+				        "valueField": "heterozygous",
+						"fillAlphas": 0,
+				        "type": "smoothedLine",
+				    }, {
+				        "valueAxis": "v1",
+				        "lineColor": "#009900",
+				        "bullet": "diamond",
+				        "bulletBorderThickness": 1,
+				        "hideBulletsCount": 30,
+				        "title": "Homozygous Recessive",
+				        "valueField": "homozygousrecessive",
+						"fillAlphas": 0,
+				        "type": "smoothedLine",
+				    }, {
+				        "valueAxis": "v1",
+				        "lineColor": "#CC6600",
+				        "bullet": "triangleLeft",
+				        "bulletBorderThickness": 1,
+				        "hideBulletsCount": 30,
+				        "title": "Homozygous Dominant",
+				        "valueField": "homozygousdominant",
+						"fillAlphas": 0,
+				        "type": "smoothedLine",
+				    },];
+			break;
 		case "genotypes":
 			return "Genotypes";
 		case "phenotypes":
@@ -231,7 +318,7 @@ function getChart(name)
 {
 	var chartData = getChartData(name);
 
-	var chart = AmCharts.makeChart("chartdiv", {
+	chart = AmCharts.makeChart("chartdiv", {
 		"titles": 
 		[
 			{
@@ -260,8 +347,8 @@ function getChart(name)
 	    },
 	});
 
-	chart.addListener("dataUpdated", zoomChart);
 	zoomChart(chart);
+	return chart;
 }
 
 function zoomChart(chart)
