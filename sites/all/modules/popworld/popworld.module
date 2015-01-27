@@ -39,10 +39,10 @@ function popworld_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   $items['ms'] = array(
-    'title' => t('Popworld'),
+    'title' => t('MS module'),
     //'description' => t('Description'),
-    'page callback' => 'my_test',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array("ms_template"),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
@@ -98,7 +98,10 @@ function popworld_theme(){
         ),  
         'selection_template' => array(
             'template' => 'selection-page',
-        ),              
+        ),
+        'ms_template' => array(
+            'template' => 'ms-page',
+        ),  
         'drift' =>  array(
           'template' => 'drift',
           'render element' => 'page'
@@ -118,7 +121,11 @@ function popworld_theme(){
         'selection' =>  array(
           'template' => 'selection',
           'render element' => 'page'
-        ),      
+        ),
+        'ms' =>  array(
+          'template' => 'ms',
+          'render element' => 'page'
+        ),     
     );
 }
 
@@ -144,7 +151,11 @@ function popworld_preprocess_page(&$variables, $hook)
   else if($variables["theme_hook_suggestions"][0] == "page__selection")
   {
     $variables['theme_hook_suggestions'][] = 'selection';
-  }  
+  }
+  else if($variables["theme_hook_suggestions"][0] == "page__ms")
+  {
+    $variables['theme_hook_suggestions'][] = 'ms';
+  }
 
 }
 

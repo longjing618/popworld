@@ -209,7 +209,7 @@
 
     <div id="content" style="height:100%">
       <?php if (theme_get_setting('breadcrumbs')): ?><div id="breadcrumbs"><?php if ($breadcrumb): print $breadcrumb; endif;?></div><?php endif; ?>
-      <section id="post-content" role="main" style="background-image: url('pics/selection_r_bg.png');background-size:100% 100%;height:100%">
+      <section id="post-content" role="main" style="background-image: url('pics/sandm_bg.png');background-size:100% 100%;height:100%">
         <?php print $messages; ?>
         <?php if ($page['content_top']): ?><div id="content_top"><?php print render($page['content_top']); ?></div><?php endif; ?>
         <?php print render($title_prefix); ?>
