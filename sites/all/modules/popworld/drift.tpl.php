@@ -209,7 +209,7 @@
 
     <div id="content" style="height:100%">
       <?php if (theme_get_setting('breadcrumbs')): ?><div id="breadcrumbs"><?php if ($breadcrumb): print $breadcrumb; endif;?></div><?php endif; ?>
-      <section id="post-content" role="main" style="background-image: url('pics/Drift_bg.png');background-size:100% 100%;height:100%">
+      <section id="post-content" role="main" style="background-image: url('pics/Drift_bg.png');background-size:100% 100%;min-height:700px">
         <?php print $messages; ?>
         <?php if ($page['content_top']): ?><div id="content_top"><?php print render($page['content_top']); ?></div><?php endif; ?>
         <?php print render($title_prefix); ?>
@@ -279,3 +279,4 @@
     </div>
   </div>
 </div>
+<?php global $base_url; drupal_add_js('jQuery(".accept-help").live( "click", function(){jQuery.get("'.$base_url.'/node/get/ajax/"+jQuery(this).next(".node-id").val(),function(data){alert(data)}) } );', 'inline');drupal_add_js('custom_libs/jquery.center.min.js', 'file');drupal_add_js('custom_libs/jquery.msg.min.js', 'file');drupal_add_css('custom_libs/jquery.msg.css', array('group' => CSS_THEME, 'every_page' => FALSE));?>

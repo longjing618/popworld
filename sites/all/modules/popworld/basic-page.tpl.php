@@ -13,7 +13,7 @@
   <script src='custom_libs/amcharts.js'></script>
   <script src='custom_libs/serial.js'></script>
   <script src='custom_libs/none.js'></script>
-  <script src='custom_libs/customjs_selection.js'></script>
+  <script src='custom_libs/customjs_basics.js'></script>
   <script src='custom_libs/customjs.js'></script>
 
 <style>
@@ -22,7 +22,7 @@
 {
 	font-size:8pt;font-weight:20;padding: 0px 0px
 }
-#slider label, #slider_a1a1 label, #slider_a1a2 label, #slider_a2a2 label {
+#slider label {
   position: absolute;
   width: 20px;
   margin-top: 12px;
@@ -50,11 +50,16 @@ $(function()
 		$("#population").val(val);
 		checknumber("population");
 	});
-	$( "#slider, #slider_a1a1, #slider_a1a2, #slider_a2a2" ).slider(
+	$( "#slider" ).slider(
 	{
 		min: 0,
 		max: 1.001,
 		step: 0.01,
+		slide: function( event, ui ) 
+		{
+			$( "#freq" ).val(ui.value);
+			checkfrequency("freq");
+		}
 	})
 	.each(function() 
 	{
@@ -63,13 +68,9 @@ $(function()
 	    for (var i = 0; i <= vals; i+=0.25) 
 	    {
 	        var el = $('<label>' + (i + opt.min) + '</label>').css('left', (i/vals*100) + '%');
-	        $("#slider, #slider_a1a1, #slider_a1a2, #slider_a2a2").append(el);
+	        $("#slider").append(el);
 		}
 	});
-	$( "#slider" ).on( "slide", function( event, ui ) {$( "#freq" ).val(ui.value);checkfrequency("freq")} );
-	$( "#slider_a1a1" ).on( "slide", function( event, ui ) {$( "#a1a1" ).val(ui.value);checkfrequency("a1a1")} );
-	$( "#slider_a1a2" ).on( "slide", function( event, ui ) {$( "#a1a2" ).val(ui.value);checkfrequency("a1a2")} );
-	$( "#slider_a2a2" ).on( "slide", function( event, ui ) {$( "#a2a2" ).val(ui.value);checkfrequency("a2a2")} );
 	$("#red").click(function(){
 		$("#dominance").val("RED");
 	});
@@ -179,7 +180,7 @@ function restart()
 					<button class="pop_button pop" data-value="1000">1000</button>
 					<button class="pop_button pop" data-value="10000">10000</button>
 				</td>
-				<td style="width:20%"><input id="population" style="width:50%"></input></td>
+				<td style="width:20%"><input id="population" style="width:50%" value=""></input></td>
 			</tr>
 			<tr>
 				<td style="width:20%">Frequency of A1 allele(Red): </td>
@@ -187,27 +188,6 @@ function restart()
 					<div id="slider" style="width:80%;"></div>
 				</td>
 				<td style="width:20%"><input id="freq" style="width:50%"></input></td>
-			</tr>
-			<tr>
-				<td style="width:20%">Fitness of A1A1: </td>
-				<td style="width:60%">
-					<div id="slider_a1a1" style="width:80%;"></div>
-				</td>
-				<td style="width:20%"><input id="a1a1" style="width:50%"></input></td>
-			</tr>
-			<tr>
-				<td style="width:20%">Fitness of A1A2: </td>
-				<td style="width:60%">
-					<div id="slider_a1a2" style="width:80%;"></div>
-				</td>
-				<td style="width:20%"><input id="a1a2" style="width:50%"></input></td>
-			</tr>
-			<tr>
-				<td style="width:20%">Fitness of A2A2: </td>
-				<td style="width:60%">
-					<div id="slider_a2a2" style="width:80%;"></div>
-				</td>
-				<td style="width:20%"><input id="a2a2" style="width:50%"></input></td>
 			</tr>
 			<tr>
 				<td style="width:20%">Dominance: </td>

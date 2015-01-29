@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" style="height:100%">
+<html lang="en">
 
 <head>
 <meta charset="utf-8">
@@ -48,6 +48,7 @@ $(function()
 		var val = $.isNumeric($("#population").val())? parseInt($("#population").val()) : 0;
 		val += parseInt($(this).attr('data-value'));
 		$("#population").val(val);
+		checknumber("population");
 	});
 	$( "#slider,#slider_A1A1,#slider_A1A2,#slider_A2A2" ).slider(
 	{
@@ -65,10 +66,10 @@ $(function()
 	        $("#slider,#slider_A1A1,#slider_A1A2,#slider_A2A2").append(el);
 		}
 	});
-	$( "#slider" ).on( "slide", function( event, ui ) {$( "#freq" ).val(ui.value);} );
-	$( "#slider_A1A1" ).on( "slide", function( event, ui ) {$( "#a1a1" ).val(ui.value);} );
-	$( "#slider_A1A2" ).on( "slide", function( event, ui ) {$( "#a1a2" ).val(ui.value);} );
-	$( "#slider_A2A2" ).on( "slide", function( event, ui ) {$( "#a2a2" ).val(ui.value);} );
+	$( "#slider" ).on( "slide", function( event, ui ) {$( "#freq" ).val(ui.value);checkfrequency("freq")} );
+	$( "#slider_A1A1" ).on( "slide", function( event, ui ) {$( "#a1a1" ).val(ui.value);checkfrequency("a1a1")} );
+	$( "#slider_A1A2" ).on( "slide", function( event, ui ) {$( "#a1a2" ).val(ui.value);checkfrequency("a1a2")} );
+	$( "#slider_A2A2" ).on( "slide", function( event, ui ) {$( "#a2a2" ).val(ui.value);checkfrequency("a2a2")} );
 	$("#red").click(function(){
 		$("#dominance").val("RED");
 	});
@@ -86,15 +87,7 @@ $(function()
 	});
 
 	$("#start").click(function(){
-		$("#top").after('<div id = "chartdiv" style="min-height:300px;width:100%;background-color:white" ></div>');
-		generatepopworld();
-		$("#graph").show();
-		showResult();
-		$("#chartdiv").hide();
-		$("#graph").click(function(){
-			$("#chartdiv").toggle();
-			$( "#graph_type" ).toggle();
-		});
+		start();
 	});
 
 	$("#graph_type").change(function(){
@@ -117,6 +110,7 @@ $(function()
 		else
 			switchchart();
 	})
+	realtimevaliad($(".active-trail .active").attr("href").split("/")[2]);
 });
 
 function showResult()
@@ -235,7 +229,7 @@ function restart()
 					  <circle id="blue" cx="15" cy="15" r="10" stroke="black" stroke-width="3" fill="blue" />
 					</svg> 					
 				</td>
-				<td style="width:20%"><input id="dominance" style="width:50%" disabled></input></td>
+				<td style="width:20%"><input id="dominance" style="width:50%" disabled value="RED"></input></td>
 			</tr>
 			<tr>
 				<td style="width:20%" colspan="2">Step n generations forwarded: </td>

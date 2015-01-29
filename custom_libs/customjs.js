@@ -1,21 +1,3 @@
-$(".accept-help").on( "click", myHandler );
-
-function myHandler( event ) 
-{
-	//alert($( this ).next().html())
-	$.ajax({
-	      url: 'node/get/ajax/'+$( this ).next().html(),
-	      type: 'post',
-	      success: function(data, status) 
-	      {
-	      		;
-	      },
-	      error: function(xhr, desc, err) {
-	      		;
-	      }
-	    });
-}
-
 basics = {};
 chart = {};
 graphs = {};
@@ -36,6 +18,159 @@ function print()
 	$("#result").html(ret);
 }
 */
+
+function validation(name)
+{
+	if($(".error_show").length)
+		return false;
+	return true;
+}
+
+function setvalid(name)
+{
+	$("#"+name).removeClass("invalid").addClass("valid");
+	$("#"+name).next("span.error_show").remove();
+}
+
+function setinvalid(name,text)
+{
+	$("#"+name).removeClass("valid").addClass("invalid")
+	if($("#"+name).next("span.error_show").length == 0)
+		$("#"+name).after($("<span class='error_show'>"+text+"</span>"));
+}
+
+function checknumber(name)
+{
+	var number = $("#"+name).val();
+	if($.isNumeric(number) && number > 0 && number.indexOf('.') == -1)
+		return setvalid(name);
+	return setinvalid(name,"Please input a positive integer");
+}
+
+function checkfrequency(name)
+{
+	var number = $("#"+name).val();
+	if(number <= 1 && number >=0)
+		return setvalid(name);
+	return setinvalid(name,"Please input a frequency");
+}
+
+function checkfrequency2(name)
+{
+	var number = $("#"+name).val();
+	if(number <= 0.00001 && number >=0.000000001)
+		return setvalid(name);
+	return setinvalid(name,"Please input a frequency between 0.00001 - 0.000000001");
+}
+
+function commoncheck()
+{
+	$("#population").on('input', function() {
+		checknumber("population");
+	});
+	$("#freq").on('input', function() {
+		checkfrequency("freq");
+	});	
+	$("#steps").on('input', function() {
+		checknumber("steps");
+	});			
+}
+
+function realtimevaliad(name)
+{
+	switch(name)
+	{
+		case "basic":
+			commoncheck();
+			break;
+		case "migration":
+			commoncheck();
+			$("#a1start").on('input', function() {
+				checkfrequency("a1start");
+			});
+			$("#fraction").on('input', function() {
+				checkfrequency("fraction");
+			});					
+			break;
+		case "drift":
+			commoncheck();
+			break;
+		case "nrmating":
+			commoncheck();
+			$("#prob").on('input', function() {
+				checkfrequency("prob");
+			});
+			break;
+		case "mutation":
+			commoncheck();
+			$("#a1toa2").on('input', function() {
+				checkfrequency2("a1toa2");
+			});
+			$("#a2toa1").on('input', function() {
+				checkfrequency2("a2toa1");
+			});			
+			break;
+		case "selection":
+			commoncheck();
+			$("#a1a1").on('input', function() {
+				checkfrequency("a1a1");
+			});
+			$("#a1a2").on('input', function() {
+				checkfrequency("a1a2");
+			});
+			$("#a2a2").on('input', function() {
+				checkfrequency("a2a2");
+			});				
+			break;
+		case "ms":
+			commoncheck();
+			$("#a1a1").on('input', function() {
+				checkfrequency("a1a1");
+			});
+			$("#a1a2").on('input', function() {
+				checkfrequency("a1a2");
+			});
+			$("#a2a2").on('input', function() {
+				checkfrequency("a2a2");
+			});
+			$("#a1toa2").on('input', function() {
+				checkfrequency2("a1toa2");
+			});
+			$("#a2toa1").on('input', function() {
+				checkfrequency2("a2toa1");
+			});					
+			break;											
+		default:
+			break;
+	}
+
+}
+
+function start()
+{
+	var module_name = $(".active-trail .active").attr("href").split("/")[2];
+	
+	if(module_name == "selection" || module_name == "ms")
+	{
+		if($("#a1a1").val() < 1 && $("#a1a2").val() < 1 && $("#a2a2").val() < 1)
+		{
+			alert("At least one fitness level must be 1.0");
+			return;
+		}
+	}
+	if(validation(module_name))
+	{
+		$("#top").after('<div id = "chartdiv" style="min-height:300px;width:100%;background-color:white" ></div>');
+		generatepopworld();
+		$("#graph").show();
+		showResult();
+		$("#chartdiv").hide();
+		$("#graph").click(function(){
+			$("#chartdiv").toggle();
+			$( "#graph_type" ).toggle();
+		});
+	}
+}
 
 function getOutput(name)
 {

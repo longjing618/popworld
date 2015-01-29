@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="en" style="height:100%">
+ value="RED"<!doctype html>
+<html lang="en">
 
 <head>
 <meta charset="utf-8">
@@ -48,6 +48,7 @@ $(function()
 		var val = $.isNumeric($("#population").val())? parseInt($("#population").val()) : 0;
 		val += parseInt($(this).attr('data-value'));
 		$("#population").val(val);
+		checknumber("population");
 	});
 	$( "#slider" ).slider(
 	{
@@ -57,6 +58,7 @@ $(function()
 		slide: function( event, ui ) 
 		{
 			$( "#freq" ).val(ui.value);
+			checkfrequency("freq");
 		}
 	})
 	.each(function() 
@@ -86,15 +88,7 @@ $(function()
 	});
 
 	$("#start").click(function(){
-		$("#top").after('<div id = "chartdiv" style="min-height:300px;width:100%;background-color:white" ></div>');
-		generatepopworld();
-		$("#graph").show();
-		showResult();
-		$("#chartdiv").hide();
-		$("#graph").click(function(){
-			$("#chartdiv").toggle();
-			$( "#graph_type" ).toggle();
-		});
+		start();
 	});
 
 	$("#graph_type").change(function(){
@@ -117,6 +111,7 @@ $(function()
 		else
 			switchchart();
 	})
+	realtimevaliad($(".active-trail .active").attr("href").split("/")[2]);
 });
 
 function showResult()
@@ -204,7 +199,7 @@ function restart()
 					  <circle id="blue" cx="15" cy="15" r="10" stroke="black" stroke-width="3" fill="blue" />
 					</svg> 					
 				</td>
-				<td style="width:20%"><input id="dominance" style="width:50%" disabled></input></td>
+				<td style="width:20%"><input id="dominance" style="width:50%" disabled value="RED"></input></td>
 			</tr>
 			<tr>
 				<td style="width:20%" colspan="2">Step n generations forwarded: </td>

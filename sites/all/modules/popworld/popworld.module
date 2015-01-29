@@ -12,16 +12,16 @@ function popworld_menu() {
     //'delivery callback' => 'popworld_ajax_callback',  // Magic goes here
   );
 
-/*
+
   $items['basic'] = array(
-    'title' => t('Popworld'),
+    'title' => t('Basic module'),
     //'description' => t('Description'),
-    'page callback' => 'my_test',
-    'page arguments' => array(),
+    'page callback' => 'popworld_template',
+    'page arguments' => array('basic_template'),
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
   );
-  */
+
   $items['drift'] = array(
     'title' => t('Drift module'),
     'description' => t('This is the drift module'),
@@ -83,6 +83,10 @@ function popworld_template($args)
  */
 function popworld_theme(){
     return array(
+        'basic_template' => array(
+            // file name will be drift-page.tpl.php
+            'template' => 'basic-page',
+        ),
         'drift_template' => array(
             // file name will be drift-page.tpl.php
             'template' => 'drift-page',
@@ -101,7 +105,11 @@ function popworld_theme(){
         ),
         'ms_template' => array(
             'template' => 'ms-page',
-        ),  
+        ),
+        'basic' =>  array(
+          'template' => 'basic',
+          'render element' => 'page'
+        ),
         'drift' =>  array(
           'template' => 'drift',
           'render element' => 'page'
@@ -132,7 +140,11 @@ function popworld_theme(){
 function popworld_preprocess_page(&$variables, $hook) 
 {
   //print_r($variables["theme_hook_suggestions"]);
-  if ($variables["theme_hook_suggestions"][0] == "page__drift") 
+  if($variables["theme_hook_suggestions"][0] == "page__basic")
+  {
+    $variables['theme_hook_suggestions'][] = 'basic';
+  }
+  else if ($variables["theme_hook_suggestions"][0] == "page__drift") 
   {
     $variables['theme_hook_suggestions'][] = 'drift';
   }
@@ -187,16 +199,21 @@ function my_test() {
 
 function popworld_ajax_get_ajax($nid) 
 {
+  drupal_debug("here");
+  if(is_numeric($nid) && strpos($nid,'.') == false)
+  {
+    //drupal_debug("inside if");
     global $user;
-    drupal_debug($nid);
+    //drupal_debug($nid);
     //set relationship here
     $node = node_load($nid);
-    drupal_debug("---");
-    drupal_debug($node->uid);
+    //drupal_debug("---");
+    //drupal_debug($node->uid);
     user_relationships_request_relationship($node->uid,$user->uid,1,true);
 
     node_delete($nid);
     print "ok";
+  }
 }
 
 /**
@@ -381,12 +398,34 @@ function popworld_form_alter(&$form, $form_state, $form_id)
 function create_help_alert($form, &$form_state)
 {
     global $user;
+
+//valid user points
+    $user_point = userpoints_get_current_points($uid,NULL); 
+    if($user_point <= 0)
+    {
+        //javascript callback after ajax call
+        $commands = array();
+        //$commands[] = ajax_command_invoke('#edit-ask-help', 'val', array('new Title'));
+        $commands[] = ajax_command_append('body', '<script> jQuery.msg({ content : "You don\'t have enough Darwin dollars" });</script>');
+        return array('#type' => 'ajax', '#commands' => $commands);
+    }
+    else if($user_point >= 30)
+    {
+        //javascript callback after ajax call
+        $commands = array();
+        //$commands[] = ajax_command_invoke('#edit-ask-help', 'val', array('new Title'));
+        $commands[] = ajax_command_append('body', '<script> jQuery.msg({ content : "You cannot get more Darwin dollars" });</script>');
+        return array('#type' => 'ajax', '#commands' => $commands);      
+    }
+//
+    
     $node = new stdClass();
-    $node->title = "Ask for help";
-    $node->type = "user_alert";
+    $node->title = "Help info:";
+    $node->type = "question_request";
     node_object_prepare($node); // Sets some defaults. Invokes hook_prepare() and hook_node_prepare().
     $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
-    $node->body[$node->language][0]['value'] = "User ".$user->name." has a question now. <input class='accept-help form-submit ajax-processed' type='submit' value='Accept help'> ";
+    $node->body[$node->language][0]['format'] = 'full_html';
+    $node->body[$node->language][0]['value'] = "User ".$user->name." has a question now. <input class='accept-help form-submit ajax-processed' type='submit' value='Accept help'></input>[replace_here] ";
     $node->uid = $user->uid;
     $node->status = 1; //(1 or 0): published or not
     $node->promote = 0; //(1 or 0): promoted to front page
@@ -404,68 +443,28 @@ function create_help_alert($form, &$form_state)
     node_save($node);
     //drupal_set_message( "Node with nid " . $node->nid . " saved!\n");
     $node = node_load($node->nid);
-    $node->body[$node->language][0]['value']  .= "<p class='node-id' hidden>".$node->nid."</p>".$node->nid;
-
+    drupal_debug($node->body[$node->language][0]['value']);
+    $node->body[$node->language][0]['value'] = str_replace("[replace_here]","<input class='node-id' hidden value=".$node->nid."></input>".$node->nid,$node->body[$node->language][0]['value']);
+drupal_debug($node->body[$node->language][0]['value']);
     node_save($node);
 
-
+/*
     $form['markup'] = array(
         '#prefix' => '<div id = "status">',
         '#suffix' => '</div>',
         '#markup' => "test",
         '#weight' => 2000,
     );
-
+*/
+/*
     //set a variable to show that the use need help for the current question
     //which will be used in the quiz module elseif ($_POST['op'] == t('Next question')) 
     $existing = user_load($user->uid);
     $edit = (array) $existing;
     $edit['data']['isasking'] = 1;
     user_save($user, $edit);
-
-    return $form['markup'];
-}
-
-/*
-function generatepopworld($form, &$form_state) 
-{
-    $module_name = $form["#form_id"];
-    $output = "";
-    switch($module_name)
-    {
-        case "webform_client_form_2":
-            $output = getBasics($form_state);
-            break;
-        case "webform_client_form_3":
-            $output = getMigration($form_state);
-            break;
-        case "webform_client_form_4":
-            $output = getDrift($form_state);
-            break;        
-        case "webform_client_form_5":
-            $output = getNRMating($form_state);
-            break;        
-        case "webform_client_form_6":
-            $output = getMutation($form_state);
-            break;        
-        case "webform_client_form_7":
-            $output = getSelection($form_state);
-            break;
-        case "webform_client_form_8":
-            $output = getMpulsS($form_state);
-            break;
-        case "webform_client_form_24":
-            $output = gethelp($form_state);
-            break;    
-    }
-    $form['markup'] = array(
-            '#prefix' => '<div id = "form-ajax-node-content">',
-            '#suffix' => '</div>',
-            '#markup' => $output,
-            '#weight' => 2000,
-       );
-    return $form['markup'];
-}
 */
+    //return $form['markup'];
+}
 
 ?>
