@@ -1,4 +1,4 @@
- value="RED"<!doctype html>
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -112,6 +112,10 @@ $(function()
 			switchchart();
 	})
 	realtimevaliad($(".active-trail .active").attr("href").split("/")[2]);
+	$("#graph").click(function(){
+		$("#chartdiv").toggle();
+		$( "#graph_type" ).toggle();
+	});		
 });
 
 function showResult()

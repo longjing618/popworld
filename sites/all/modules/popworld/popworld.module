@@ -212,7 +212,8 @@ function popworld_ajax_get_ajax($nid)
     user_relationships_request_relationship($node->uid,$user->uid,1,true);
 
     node_delete($nid);
-    print "ok";
+    $helper = user_load($node->uid);
+    print "You can chatting with ".$helper->name." to help answering question now";
   }
 }
 
@@ -465,6 +466,15 @@ drupal_debug($node->body[$node->language][0]['value']);
     user_save($user, $edit);
 */
     //return $form['markup'];
+}
+
+function popworld_user_insert(&$edit, $account, $category)
+{
+    $params = array (
+      'uid' => $account->uid,
+      'points' => 10,
+    );
+    userpoints_userpointsapi($params); 
 }
 
 ?>

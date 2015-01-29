@@ -65,7 +65,7 @@
  */
 ?>
 
-<div id="wrapper">
+<div id="wrapper" style="height:100%">
   <header id="header" role="banner">
     <?php if ($logo): ?><div id="logo"><a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"><img src="<?php print $logo; ?>"/></a></div><?php endif; ?>
     <?php if ($site_name): ?><h1 id="site-title"><a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?></a></h1><?php endif; ?>
@@ -93,7 +93,7 @@
   </header>
 
 
-  <div id="container">
+  <div id="container" style="height:100%">
 
     <?php if ($is_front || theme_get_setting('slideshow_all')): ?>
       <?php if (theme_get_setting('slideshow_display')): ?>
@@ -205,11 +205,11 @@
    <div class="clear"></div>
    <?php endif; ?>
 
-    <div class="content-sidebar-wrap">
+    <div class="content-sidebar-wrap" style="height:100%">
 
-    <div id="content">
+    <div id="content" style="height:100%">
       <?php if (theme_get_setting('breadcrumbs')): ?><div id="breadcrumbs"><?php if ($breadcrumb): print $breadcrumb; endif;?></div><?php endif; ?>
-      <section id="post-content" role="main">
+      <section id="post-content" role="main" style="background-image: url('pics/background1.png');background-size:100% 100%;min-height:700px">
         <?php print $messages; ?>
         <?php if ($page['content_top']): ?><div id="content_top"><?php print render($page['content_top']); ?></div><?php endif; ?>
         <?php print render($title_prefix); ?>
