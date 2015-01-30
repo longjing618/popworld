@@ -199,7 +199,6 @@ function my_test() {
 
 function popworld_ajax_get_ajax($nid) 
 {
-  drupal_debug("here");
   if(is_numeric($nid) && strpos($nid,'.') == false)
   {
     //drupal_debug("inside if");
@@ -209,11 +208,16 @@ function popworld_ajax_get_ajax($nid)
     $node = node_load($nid);
     //drupal_debug("---");
     //drupal_debug($node->uid);
-    user_relationships_request_relationship($node->uid,$user->uid,1,true);
-
+    if($node->uid != $user->uid)
+    {
+      user_relationships_request_relationship($node->uid,$user->uid,1,true);
+      $helper = user_load($node->uid);
+      print "You can chatting with ".$helper->name." to help answering question now";
+    }
+    else
+      print "You question request has been deleted";
     node_delete($nid);
-    $helper = user_load($node->uid);
-    print "You can chatting with ".$helper->name." to help answering question now";
+
   }
 }
 
@@ -271,9 +275,6 @@ function assignbadge($account,$article)
     
     switch($article->nid)
     {
-        case 12:
-            $role_id = 7;
-            break;
         case 14:
             $role_id = 8;
             break;
@@ -293,8 +294,52 @@ function assignbadge($account,$article)
             $role_id = 13;
             break;                                                            
     }
-    if (user_role_load($role_id))
+
+    $role = user_role_load($role_id);
+    $current_userpoint = userpoints_get_current_points($user_id,NULL); 
+    if ($role)
+    {
         user_multiple_role_edit(array($user_id), 'add_role', $role_id);
+
+        //reward user point
+        if($current_userpoint < 30)
+          $params = array(
+            'uid' => $user_id,
+            'points' => 2,
+            'description' => "You are rewarded 2 Darwin dollars for being the ".$role->name." (You will be rewarded 4 Darwin dollars for being another expert if you have more than 30 Darwin dollars.)",
+            'display' => FALSE,
+          );
+        else
+          $params = array(
+            'uid' => $user_id,
+            'points' => 4,
+            'description' => "You are rewarded 4 Darwin dollars for being the ".$role->name,
+            'display' => FALSE,
+          );
+        userpoints_userpointsapi($params);
+
+        //Check if use finish all modules
+        $i=8;
+        for(;$i<14;$i++)
+        {
+          $role = user_role_load($i);
+          if (in_array($role->name, $account->roles))
+            continue;
+          else
+            break;
+        }
+        if($i == 14)
+        {
+          $params = array(
+            'uid' => $user_id,
+            'points' => 10,
+            'description' => "Congratulations! You are rewarded 10 Darwin dollars since you have finished all the modules",
+            'display' => FALSE,
+          );
+          userpoints_userpointsapi($params);
+        }
+
+    }
 }
 
 /**
@@ -401,8 +446,8 @@ function create_help_alert($form, &$form_state)
     global $user;
 
 //valid user points
-    $user_point = userpoints_get_current_points($uid,NULL); 
-    if($user_point <= 0)
+    $user_point = userpoints_get_current_points($user->uid,NULL); 
+    if($user_point <= 2)
     {
         //javascript callback after ajax call
         $commands = array();
@@ -445,7 +490,7 @@ function create_help_alert($form, &$form_state)
     //drupal_set_message( "Node with nid " . $node->nid . " saved!\n");
     $node = node_load($node->nid);
     drupal_debug($node->body[$node->language][0]['value']);
-    $node->body[$node->language][0]['value'] = str_replace("[replace_here]","<input class='node-id' hidden value=".$node->nid."></input>".$node->nid,$node->body[$node->language][0]['value']);
+    $node->body[$node->language][0]['value'] = str_replace("[replace_here]","<input class='node-id' hidden value=".$node->nid."></input>",$node->body[$node->language][0]['value']);
 drupal_debug($node->body[$node->language][0]['value']);
     node_save($node);
 
