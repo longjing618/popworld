@@ -6,6 +6,9 @@ function generatepopworld()
 {
 	basics = init();
 	getOutput("freq");
+	chart.hideGraph(graphs[2]);
+	chart.hideGraph(graphs[3]);
+	chart.hideGraph(graphs[4]);
 }
 
 /*
@@ -319,7 +322,7 @@ function getChartData(name)
 				        "bullet": "round",
 				        "bulletBorderThickness": 1,
 				        "hideBulletsCount": 30,
-				        "title": "Red",
+				        "title": "p",
 				        "valueField": "A1",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
@@ -330,7 +333,7 @@ function getChartData(name)
 				        "bullet": "square",
 				        "bulletBorderThickness": 1,
 				        "hideBulletsCount": 30,
-				        "title": "Blue",
+				        "title": "q",
 				        "valueField": "A2",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
