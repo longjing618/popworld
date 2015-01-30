@@ -560,7 +560,8 @@ function theme_quiz_take_summary($variables) {
     }
     $output .= '<div id="quiz_score_possible">' . t('You got %num_correct of %question_count possible points.', array('%num_correct' => $score['numeric_score'], '%question_count' => $score['possible_score'])) . '</div>' . "\n";
     $output .= '<div id="quiz_score_percent">' . t('Your score: %score %', array('%score' => $score['percentage_score'])) . '</div>' . "\n";
-  $output .= t('You got a badge: ') . '<img src="sites/default/files/badges/basics_expert.png"></img>';
+global $base_url;
+  $output .= t('Congratulations! You got a new badge and more Darwin dollars. <a class="self-score" href="!result_url">Click here to check</a>',array('!result_url' => $base_url."/user"));
   }
   if (isset($summary['passfail'])) {
     $output .= '<div id="quiz_summary">' . $summary['passfail'] . '</div>' . "\n";

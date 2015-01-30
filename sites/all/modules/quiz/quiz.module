@@ -1975,17 +1975,19 @@ function quiz_take_quiz($quiz) {
   // feedback time it set to show after each questions
   elseif ($_POST['op'] == t('Next question')) {
     
-    if($user->data['isasking'] == 1)
-    {
+    //first clear the user try count
+    $_SESSION['quiz_' . $quiz->nid][$user->uid]["count"] = 0;
       //we need to transfer userpoints here
       $relationships = user_relationships_load(array('rtid' => 1, 'user' => $user->uid, 'approved' => 1), array(), TRUE);
       foreach ($relationships as $rid => $relationship) 
       {
+        $temp_user=user_load($relationship->requestee_id);
+        $temp_username=$temp_user->name;
         //requestee_id is the helper
         $params = array(
           'uid' => $relationship->requestee_id,
           'points' => 2,
-          'description' => $user->uid. " transfer 2 points to ". $relationship->requestee_id,
+          'description' => $user->name. " transfer 2 points to ". $temp_username . ' for asking help',
           'display' => FALSE,
         );
         userpoints_userpointsapi($params);
@@ -1993,21 +1995,15 @@ function quiz_take_quiz($quiz) {
         $params = array(
           'uid' => $relationship->requester_id,
           'points' => -2,
-          'description' => $user->uid. " transfer 2 points to ". $relationship->requestee_id . ' for question',
+          'description' => $user->name. " transfer 2 points to ". $temp_username . ' for asking help',
           'display' => FALSE,
         );
         userpoints_userpointsapi($params);
 
         user_relationships_delete_relationship($relationship, 1, $op = 'remove');
-      }
-      $existing = user_load($user->uid);
-      $edit = (array) $existing;
-      $edit['data']['isasking'] = 0;
-      user_save($user, $edit);
     }
 
-
-
+    
     drupal_goto("node/{$quiz->nid}/take");
   }
   // We maintain two lists: previous questions and upcomming questions.
@@ -2040,15 +2036,24 @@ function quiz_take_quiz($quiz) {
       $allow_skipping = TRUE;
       $jumping = TRUE;
     }
-
+    
     if ($quiz->repeat_until_correct && $_POST['op'] != t('Back') && $q_passed_validation === TRUE) {
       // If the question was answered incorrectly, repeat it
       if ($result && !$result->is_correct && $result->is_evaluated) {
         $last_q = array_pop($_SESSION['quiz_' . $quiz->nid]['previous_quiz_questions']);
         array_unshift($_SESSION['quiz_' . $quiz->nid]['quiz_questions'], $last_q);
-        drupal_set_message(t('The answer was incorrect. Please try again.'), 'error');
+        drupal_set_message(t('The answer was incorrect. Please try again.'), 'warning');
         $repeat_until_correct_error = TRUE;
         unset($_SESSION['quiz_' . $quiz->nid]['feedback']);
+
+        $_SESSION['quiz_' . $quiz->nid][$user->uid]["count"]++;
+        //unset($_SESSION['quiz_' . $quiz->nid]);
+        if($_SESSION['quiz_' . $quiz->nid][$user->uid]["count"] == 2)
+        {
+          $_SESSION['quiz_' . $quiz->nid][$user->uid]["count"] = 0;
+          drupal_set_message(t('You had failed this question 2 time. Please retake the quiz.'), 'warning');
+          drupal_goto("node/{$quiz->nid}");
+        }
       }
     }
     elseif ($_POST['op'] == t('Back') && $quiz->backwards_navigation) {
@@ -2318,6 +2323,8 @@ function _quiz_take_quiz_init($quiz) {
   $_SESSION['quiz_' . $quiz->nid]['question_start_time'] = REQUEST_TIME;
   $_SESSION['quiz_' . $quiz->nid]['quiz_vid'] = $quiz->vid;
 
+$_SESSION['quiz_' . $quiz->nid][$user->uid]["count"] = 0;
+
   if ($quiz->time_limit > 0) {
     $_SESSION['quiz_' . $quiz->nid]['question_duration'] = $quiz->time_limit;
   }
@@ -2554,12 +2561,6 @@ function quiz_quiz_finished($quiz, $score, $session_data) {
     }
     userpoints_userpointsapi($params);
   }
-
-  //if($score["passing"] == 1)
-  //{
-
-  //}
-  //drupal_debug($quiz);
   rules_invoke_event('getbadge_event', $quiz,$score["passing"]);
 }
 
