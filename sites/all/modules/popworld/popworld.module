@@ -455,14 +455,6 @@ function create_help_alert($form, &$form_state)
         $commands[] = ajax_command_append('body', '<script> jQuery.msg({ content : "You don\'t have enough Darwin dollars" });</script>');
         return array('#type' => 'ajax', '#commands' => $commands);
     }
-    else if($user_point >= 30)
-    {
-        //javascript callback after ajax call
-        $commands = array();
-        //$commands[] = ajax_command_invoke('#edit-ask-help', 'val', array('new Title'));
-        $commands[] = ajax_command_append('body', '<script> jQuery.msg({ content : "You cannot get more Darwin dollars" });</script>');
-        return array('#type' => 'ajax', '#commands' => $commands);      
-    }
 //
     
     $node = new stdClass();
