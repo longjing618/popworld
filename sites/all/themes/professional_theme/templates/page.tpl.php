@@ -279,5 +279,4 @@
     </div>
   </div>
 </div>
-<?php global $base_url; drupal_add_js('jQuery(".accept-help").live( "click", function(){var str = jQuery("a[href$=\"user\"]").html();str = str.split("Darwin dollars: ");if(str[1] >= 30) jQuery.msg({ content : "You cannot get more Darwin dollars" });else jQuery.get("'.$base_url.'/node/get/ajax/"+jQuery(this).next(".node-id").val(),function(data){alert(data)}) } );', 'inline');drupal_add_js('custom_libs/jquery.center.min.js', 'file');drupal_add_js('custom_libs/jquery.msg.min.js', 'file');drupal_add_css('custom_libs/jquery.msg.css', array('group' => CSS_THEME, 'every_page' => FALSE));?>
-
+<?php global $base_url; drupal_add_js('jQuery(".accept-help").live( "click", function(){var str = jQuery("a[href$=\"user\"]").html();str = str.split("Darwin dollars: ");if(str[1] >= 30) alert("You cannot get more Darwin dollars");else jQuery.get("'.$base_url.'/node/get/ajax/"+jQuery(this).next(".node-id").val(),function(data){alert(data)}) } );', 'inline');drupal_add_js('custom_libs/jquery.center.min.js', 'file');drupal_add_js('custom_libs/jquery.msg.min.js', 'file');drupal_add_css('custom_libs/jquery.msg.css', array('group' => CSS_THEME, 'every_page' => FALSE));?>

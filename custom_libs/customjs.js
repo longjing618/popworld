@@ -165,10 +165,6 @@ function start()
 		$("#graph").show();
 		showResult();
 		$("#chartdiv").hide();
-		$("#graph").click(function(){
-			$("#chartdiv").toggle();
-			$( "#graph_type" ).toggle();
-		});
 	}
 }
 

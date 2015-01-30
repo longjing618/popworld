@@ -201,13 +201,9 @@ function popworld_ajax_get_ajax($nid)
 {
   if(is_numeric($nid) && strpos($nid,'.') == false)
   {
-    //drupal_debug("inside if");
     global $user;
-    //drupal_debug($nid);
     //set relationship here
     $node = node_load($nid);
-    //drupal_debug("---");
-    //drupal_debug($node->uid);
     if($node->uid != $user->uid)
     {
       user_relationships_request_relationship($node->uid,$user->uid,1,true);
@@ -481,9 +477,8 @@ function create_help_alert($form, &$form_state)
     node_save($node);
     //drupal_set_message( "Node with nid " . $node->nid . " saved!\n");
     $node = node_load($node->nid);
-    drupal_debug($node->body[$node->language][0]['value']);
+    
     $node->body[$node->language][0]['value'] = str_replace("[replace_here]","<input class='node-id' hidden value=".$node->nid."></input>",$node->body[$node->language][0]['value']);
-drupal_debug($node->body[$node->language][0]['value']);
     node_save($node);
 
 /*
