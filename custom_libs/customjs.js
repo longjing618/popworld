@@ -326,7 +326,7 @@ function getChartData(name)
 				        "valueField": "A1",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
-				        //"balloonFunction":getTitle,
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v2",
 				        "lineColor": ($("#dominance").val() == "RED"? "blue":"red"),
@@ -337,6 +337,7 @@ function getChartData(name)
 				        "valueField": "A2",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v1",
 				        "lineColor": "#009900",
@@ -347,6 +348,7 @@ function getChartData(name)
 				        "valueField": "A1A1",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v1",
 				        "lineColor": "#CC6600",
@@ -357,6 +359,7 @@ function getChartData(name)
 				        "valueField": "A1A2",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v1",
 				        "lineColor": "#FF3399",
@@ -367,6 +370,7 @@ function getChartData(name)
 				        "valueField": "A2A2",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    },];
 			break;
 		case "pop_count":
@@ -400,7 +404,7 @@ function getChartData(name)
 				        "valueField": "dominant",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
-				        //"balloonFunction":getTitle,
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v2",
 				        "lineColor": "blue",
@@ -411,6 +415,7 @@ function getChartData(name)
 				        "valueField": "heterozygous",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v1",
 				        "lineColor": "#009900",
@@ -421,6 +426,7 @@ function getChartData(name)
 				        "valueField": "homozygousrecessive",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    }, {
 				        "valueAxis": "v1",
 				        "lineColor": "#CC6600",
@@ -431,6 +437,7 @@ function getChartData(name)
 				        "valueField": "homozygousdominant",
 						"fillAlphas": 0,
 				        "type": "smoothedLine",
+				        "balloonFunction":getText,
 				    },];
 			break;
 		case "genotypes":
@@ -492,11 +499,9 @@ function zoomChart(chart)
     chart.zoomToIndexes(chart.dataProvider.length - 20, chart.dataProvider.length - 1);
 }
 
-function getTitle(data,data1)
+function getText(data,data1)
 {
 	var ret = "";
-	$.each(basics.data[basics.count-1], function(key,val){
-		ret += key+": " + val + "<br/>";
-	});
+	ret += data1.title+": " + data.values.value;
 	return ret;
 }
