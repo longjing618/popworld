@@ -177,19 +177,52 @@ function showanimation()
 {
 	$(".liz").remove();
 	var data = basics.data[basics.data.length-1];
-	if(data.dominant == "red")
+	var domcount = data.currentDominantPopCount;
+	var nondomcount = parseInt(data.populationSize)-data.currentDominantPopCount;
+	var dom = 0;
+	var restcount = 0;
+	var commoncount = 0;
+	if(domcount > nondomcount)
 	{
-		for(var i=0;i<data.currentDominantPopCount;i++)
-			showliz("pics/red.png");
-		for(var i=0;i<parseInt(data.populationSize)-data.currentDominantPopCount;i++)
-			showliz("pics/blue.png");
+		dom = 1;
+		restcount = domcount - nondomcount;
+		commoncount = nondomcount;
 	}
 	else
 	{
-		for(var i=0;i<data.currentDominantPopCount;i++)
-			showliz("pics/blue.png");
-		for(var i=0;i<parseInt(data.populationSize)-data.currentDominantPopCount;i++)
-			showliz("pics/red.png");
+		restcount = nondomcount - domcount;
+		commoncount = domcount;
+	}
+	for(var i=0;i<commoncount;i++)
+	{
+		showliz("pics/red.png");
+		showliz("pics/blue.png");
+	}
+	if(dom == 0)
+	{
+		if(data.dominant == "red")
+		{
+			for(var i=0;i<restcount;i++)
+				showliz("pics/blue.png");
+		}
+		else
+		{
+			for(var i=0;i<restcount;i++)
+				showliz("pics/red.png");				
+		}
+	}
+	else
+	{
+		if(data.dominant == "red")
+		{
+			for(var i=0;i<restcount;i++)
+				showliz("pics/red.png");
+		}
+		else
+		{
+			for(var i=0;i<restcount;i++)
+				showliz("pics/blue.png");				
+		}			
 	}
 }
 
@@ -226,6 +259,9 @@ function getOutput(name)
 		if(status == 0)
 			$("#chartdiv").hide()
 		showResult();
+
+		$(".liz").remove();
+		showanimation();
 	})
 }
 
