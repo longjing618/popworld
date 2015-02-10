@@ -168,7 +168,34 @@ function start()
 		$("#graph").show();
 		showResult();
 		$("#chartdiv").hide();
+		
+		showanimation();
 	}
+}
+
+function showanimation()
+{
+	$(".liz").remove();
+	var data = basics.data[basics.data.length-1];
+	if(data.dominant == "red")
+	{
+		for(var i=0;i<data.currentDominantPopCount;i++)
+			showliz("pics/red.png");
+		for(var i=0;i<parseInt(data.populationSize)-data.currentDominantPopCount;i++)
+			showliz("pics/blue.png");
+	}
+	else
+	{
+		for(var i=0;i<data.currentDominantPopCount;i++)
+			showliz("pics/blue.png");
+		for(var i=0;i<parseInt(data.populationSize)-data.currentDominantPopCount;i++)
+			showliz("pics/red.png");
+	}
+}
+
+function showliz(path)
+{
+	showImage("#top", 900, 300, path, 100, 100,20,480);
 }
 
 function getOutput(name)
@@ -504,4 +531,20 @@ function getText(data,data1)
 	var ret = "";
 	ret += data1.title+": " + data.values.value;
 	return ret;
+}
+
+function random(max) 
+{
+	return Math.floor(Math.random()*(max+1));
+}
+
+function showImage(container, maxwidth, maxheight, imgsrc, imgwidth, imgheight,marginleft,margintop) {
+    var width = random(maxwidth - imgwidth)+marginleft;
+    var top = random(maxheight - imgheight)+margintop;
+    $(container).append(
+        "<img src='" + imgsrc + 
+        "' style='display:block; float:left; position:absolute;" + 
+        "left:" + width + "px;" +
+        "top:"  + top + "px'" +
+        "class='liz'>");
 }

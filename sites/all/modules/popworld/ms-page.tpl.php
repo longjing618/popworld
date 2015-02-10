@@ -166,6 +166,7 @@ function restart()
 	$("#graph").hide();
 	$("#graph_type").hide();
 	$("#result").hide();
+	$(".liz").remove();
 }
 
 </script>
